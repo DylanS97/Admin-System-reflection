@@ -96,7 +96,7 @@ class CompaniesController extends Controller
             $company->update($attributes);
             if ($request->file('logo')) {
                 Companies::deleteImage($company->logo);
-                $image['logo'] = str_replace('public/', '', $request->file('logo')->store('public/images'));
+                $image['logo'] = str_replace('public/', '', $request->file('logo')->store('public'));
                 $company->update($image);
             }
         } catch (QueryException $e) {
