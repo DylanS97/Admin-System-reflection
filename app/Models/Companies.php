@@ -104,7 +104,7 @@ class Companies extends Model
     // Deletes images.
     protected static function deleteImage($logo)
     {
-        $dir = 'storage/images/';
+        $dir = 'storage/';
         try {
             unlink($dir . $logo);
         } catch(Exception $e) {}

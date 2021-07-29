@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(userSeederTable::class);
         
-        $this->deleteImages('public/storage/images');
+        $this->deleteImages('public/storage');
 
         $companies = Companies::factory(60)->create();
 

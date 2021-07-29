@@ -52,7 +52,7 @@ class CompaniesController extends Controller
         $image = $request->file('logo')->store('public');
         // dd($image);
 
-        $company->addCompany($attributes['name'], $attributes['email'], str_replace('storage/app/public/', '', $image), $attributes['website']);
+        $company->addCompany($attributes['name'], $attributes['email'], str_replace('public/', '', $image), $attributes['website']);
 
         return redirect('/companies');
     }
@@ -96,7 +96,7 @@ class CompaniesController extends Controller
             $company->update($attributes);
             if ($request->file('logo')) {
                 Companies::deleteImage($company->logo);
-                $image['logo'] = str_replace('public/images/', '', $request->file('logo')->store('public/images'));
+                $image['logo'] = str_replace('public/', '', $request->file('logo')->store('public/images'));
                 $company->update($image);
             }
         } catch (QueryException $e) {
