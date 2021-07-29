@@ -1,0 +1,34 @@
+
+.width-120 {
+    width: 120px;
+}
+.width-80 {
+    width: 80px;
+}
+.min-w-half {
+    min-width: 50%;
+}
+.category:active {
+    transform: scale(.99);
+}
+#search-container {
+    width: 100%;
+max-width: 300px;
+}
+.center-popup {
+    position: absolute;
+    top: -100%;
+    left: 50%;
+    padding: 30px 40px;
+    border-radius: 10px;
+    transform: translateX(-50%);
+    background-color: #dddddd;
+}
+.screen-center {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.show-popup {
+    top: 10px;
+}
