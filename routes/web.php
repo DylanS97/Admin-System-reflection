@@ -22,6 +22,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/companies/{company}/employees', [CompaniesController::class, 'show']);
 
     Route::resource('employees', 'App\Http\Controllers\EmployeesController');
+    Route::get('/companies/{company}/employees/create', [EmployeesController::class, 'create']);
     Route::get('/employees/company/{company}', [EmployeesController::class, 'index']);
 });
 

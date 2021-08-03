@@ -12,20 +12,32 @@
                 <div class="flex-1 px-2">
                     <div class="py-3">
                         <label for="name" class="block">Name</label>
-                        <input value="@if($company) {{ $company->name }} @endif" type="text" name="name" class="block w-full rounded-lg">
+                        <input value="@if (old('name')) {{ old('name') }} @elseif ($company) {{ $company->name }} @endif" type="text" name="name" class="block w-full rounded-lg">
+                        @error('name')
+                            <span class="block text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="py-3">
                         <label for="email" class="block">Email</label>
-                        <input value="@if($company) {{ $company->email }} @endif" type="email" name="email" class="block w-full rounded-lg">
+                        <input value="@if (old('email')) {{ old('email') }} @elseif ($company) {{ $company->email }} @endif" type="email" name="email" class="block w-full rounded-lg">
+                        @error('email')
+                            <span class="block text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="py-3">
                         <label for="website" class="mr-8">Website</label>
-                        <input value="@if($company) {{ $company->website }} @endif" type="url" name="website" class="rounded-lg w-full">
+                        <input value="@if (old('website')) {{ old('website') }} @elseif ($company) {{ $company->website }} @endif" type="url" name="website" class="rounded-lg w-full">
+                        @error('website')
+                            <span class="block text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="py-8">
                         <div class="flex-1">
                             <label for="logo" class="inline-block w-20 border-r-2 border-gray-300">Logo</label>
                             <input type="file" accept="image/*" name="logo" id="logo" class="ml-10">
+                            @error('logo')
+                                <span class="block text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                 </div>

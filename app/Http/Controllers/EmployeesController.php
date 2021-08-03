@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Companies;
 use App\Models\Employees;
+use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
@@ -23,15 +24,13 @@ class EmployeesController extends Controller
     // Show an employee.
     public function show(Employees $employee)
     {
-        return view('employees.show', [
-            'employee' => $employee
-        ]);
+        return view('employees.show')
+            ->with(['employee' => $employee]);
     }
 
     // Direct to employee create page.
-    public function create()
+    public function create(Companies $company)
     {
-        $company = Companies::where('id', Employees::getParentCompany())->get();
         return view('employees.create')
             ->with([ 'company' => $company ]);
     }
@@ -39,29 +38,32 @@ class EmployeesController extends Controller
     // Store the created employee.
     public function store(Employees $employee) 
     {
-        $company = Companies::where('id', request('company'))->get('id');
-        $attributes = Employees::getAttr();
-        $attributes['company_id'] = $company[0]->id;
+        $company = Companies::where('id', request('company'))->first();
+        try {
+            $attributes = Employees::getAttr();
+        } catch (Exception $e) {
+            return back()->withInput()->withErrors($e->validator);
+        }
 
-        $employee->addEmployee($company[0]->id, $attributes['first_name'], $attributes['last_name'], $attributes['email'], $attributes['phone_number']);
+        $employee->addEmployee($company->id, $attributes['first_name'], $attributes['last_name'], $attributes['email'], $attributes['phone_number']);
 
-        return redirect('/companies/' . $company[0]->id . '/employees');
+        return redirect('/companies/' . $company->id . '/employees');
     }
 
     // Edit an employees details and what company they work for.
     public function edit(Employees $employee)
     {
+        $company = Companies::where('id', $employee->company_id)->first();
         return view('employees.edit') 
             ->with([
-                'company' => Companies::where('id', $employee->company_id)->get(),
-                'com' => $employee->company->name,
+                'company' => $company,
                 'employee' => $employee]);
     }
 
     public function update(Employees $employee)
     {
         try {
-            $employee->update(request()->all());
+            $employee->update(Employees::getAttr());
         } catch (QueryException $e) {
             $errorCode = $e->errorInfo[1];
             if($errorCode == 1062) {

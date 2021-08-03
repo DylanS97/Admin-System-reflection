@@ -9,6 +9,7 @@
         'method' => 'PATCH',
         'employee' => $employee,
         'button' => 'Update Employee',
-        'company' => $company
+        'company' => $company,
+        'slug' => '/employees/' . $employee->id
     ])
 </x-app-layout>

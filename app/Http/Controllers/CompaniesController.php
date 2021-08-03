@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Companies;
 use App\Models\Employees;
+use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
@@ -43,14 +44,13 @@ class CompaniesController extends Controller
     // Store created company.
     public function store(Companies $company, Request $request) 
     {
-        $attributes = request()->validate([
-            'name' =>'required',
-            'email' => 'required',
-            'website' => 'required'
-        ]);
-
-        $image = $request->file('logo')->store('public');
-        // dd($image);
+        try {
+            $attributes = Companies::getUpdateAttributes();
+            Companies::validateImage();
+            $image = $request->file('logo')->store('public');
+        } catch (Exception $e) {
+            return back()->withInput()->withErrors($e->validator);
+        }
 
         $company->addCompany($attributes['name'], $attributes['email'], str_replace('public/', '', $image), $attributes['website']);
 
@@ -90,15 +90,18 @@ class CompaniesController extends Controller
      */
     public function update(Companies $company, Request $request)
     {
-        $attributes = Companies::getUpdateAttributes($company, $request);
+        try {
+            $attributes = Companies::getUpdateAttributes();
+            if ($request->file('logo')) {
+                Companies::validateImage();
+                $attributes['logo'] = str_replace('public/', '', $request->file('logo')->store('public'));
+            }
+        } catch (Exception $e) {
+            return back()->withErrors($e->validator)->withInput();
+        }
 
         try {
             $company->update($attributes);
-            if ($request->file('logo')) {
-                Companies::deleteImage($company->logo);
-                $image['logo'] = str_replace('public/', '', $request->file('logo')->store('public'));
-                $company->update($image);
-            }
         } catch (QueryException $e) {
             $errorCode = $e->errorInfo[1];
             if($errorCode == 1062) {

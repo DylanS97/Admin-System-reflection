@@ -90,15 +90,21 @@ class Companies extends Model
     }
 
     // Get attributes for update.
-    public static function getUpdateAttributes($company, $request) {
+    public static function getUpdateAttributes() {
         
-        $attributes = request()->validate([
+        return request()->validate([
             'name' => 'required',
-            'email' => 'required',
-            'website' => 'required'
+            'email' => 'required|email',
+            'website' => 'required|url'
         ]);
+    }
 
-        return $attributes;
+    // Validate the uploaded file.
+    public static function validateImage() 
+    {
+        return request()->validate([
+            'logo' => 'required|image'
+        ]);
     }
 
     // Deletes images.

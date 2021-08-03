@@ -18,7 +18,7 @@
         'val' => 'Company'
     ])
         @slot('content')
-            <a class="mx-3" href="/employees/create" title="Add Employee">
+            <a class="mx-3" href="/companies/{{ $company->id }}/employees/create" title="Add Employee">
                 <i class="far fa-plus-square text-green-500 hover:text-green-600 text-4xl" style="margin-top: 2px"></i>
             </a>
         @endslot
