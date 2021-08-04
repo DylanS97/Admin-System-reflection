@@ -47,12 +47,12 @@ class CompaniesController extends Controller
         try {
             $attributes = Companies::getUpdateAttributes();
             Companies::validateImage();
-            $image = $request->file('logo')->store('public');
+            $attributes['logo'] = str_replace('public/', '', $request->file('logo')->store('public'));
         } catch (Exception $e) {
             return back()->withInput()->withErrors($e->validator);
         }
 
-        $company->addCompany($attributes['name'], $attributes['email'], str_replace('public/', '', $image), $attributes['website']);
+        $company->addCompany($attributes);
 
         return redirect('/companies');
     }

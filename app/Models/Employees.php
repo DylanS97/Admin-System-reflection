@@ -72,8 +72,8 @@ class Employees extends Model
         return request()->validate([
             'first_name' =>'required',
             'last_name' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10'
+            'email' => 'required|email|unique:employees',
+            'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:employees'
         ]);
     }
 

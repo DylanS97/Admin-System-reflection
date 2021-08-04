@@ -64,11 +64,10 @@ class EmployeesController extends Controller
     {
         try {
             $employee->update(Employees::getAttr());
-        } catch (QueryException $e) {
-            $errorCode = $e->errorInfo[1];
-            if($errorCode == 1062) {
-                return redirect("/employees/" . $employee->id)->withErrors($errorCode);
-            }
+        } catch (Exception $e) {
+            $error = $e->validator;
+
+            return back()->withErrors($error);
         }
 
         return redirect("/employees/" . $employee->id);

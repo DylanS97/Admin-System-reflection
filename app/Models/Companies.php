@@ -25,15 +25,14 @@ class Companies extends Model
     }
 
     // Create a company.
-    public function addCompany($name, $email, $logo, $website) 
+    public function addCompany($attributes) 
     {
         try {
-            $this->create(compact(['name', 'email', 'logo', 'website']));
-        } catch (QueryException $e) {
-            $errorCode = $e->errorInfo[1];
-            if($errorCode == 1062) {
-                return back()->withErrors($errorCode);
-            }
+            $this->create($attributes);
+        } catch (Exception $e) {
+            $error = $e->validator;
+
+            return back()->withErrors($error);
         }
     }
 
@@ -93,8 +92,8 @@ class Companies extends Model
     public static function getUpdateAttributes() {
         
         return request()->validate([
-            'name' => 'required',
-            'email' => 'required|email',
+            'name' => 'required|unique:companies',
+            'email' => 'required|email|unique:companies',
             'website' => 'required|url'
         ]);
     }
