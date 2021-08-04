@@ -5,9 +5,6 @@
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php $component->withAttributes([]); ?>
-    <?php echo $__env->make('components.error-box', [
-        'content' => 'Company details already exist in the database.'
-    ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
      <?php $__env->slot('header'); ?> 
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             <?php echo e(__('Companies')); ?>
@@ -78,21 +75,6 @@
 
         </span>
     </div>
-    <?php if($errors->any()): ?>
-        <?php if($errors->first() == 1062): ?>
-            <script>
-                function errorHandler() {
-                    // document.querySelector('#error-popup').classList.remove('-top-full');
-                    document.querySelector('#error-popup').classList.add('show-popup');
-                    setTimeout(() => {
-                        document.querySelector('#error-popup').classList.remove('show-popup');
-                        // document.querySelector('#error-popup').classList.add('-top-full');
-                    }, 3000);
-                }
-                errorHandler();
-                </script>
-        <?php endif; ?>
-    <?php endif; ?>
  <?php if (isset($__componentOriginal8e2ce59650f81721f93fef32250174d77c3531da)): ?>
 <?php $component = $__componentOriginal8e2ce59650f81721f93fef32250174d77c3531da; ?>
 <?php unset($__componentOriginal8e2ce59650f81721f93fef32250174d77c3531da); ?>

@@ -1,8 +1,5 @@
 
 <x-app-layout>
-    @include('components.error-box', [
-        'content' => 'Company details already exist in the database.'
-    ])
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Companies') }}
@@ -70,19 +67,4 @@
             {{ $companies->appends(compact('items'))->links() }}
         </span>
     </div>
-    @if($errors->any())
-        @if ($errors->first() == 1062)
-            <script>
-                function errorHandler() {
-                    // document.querySelector('#error-popup').classList.remove('-top-full');
-                    document.querySelector('#error-popup').classList.add('show-popup');
-                    setTimeout(() => {
-                        document.querySelector('#error-popup').classList.remove('show-popup');
-                        // document.querySelector('#error-popup').classList.add('-top-full');
-                    }, 3000);
-                }
-                errorHandler();
-                </script>
-        @endif
-    @endif
 </x-app-layout>

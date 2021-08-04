@@ -1,9 +1,6 @@
 @extends('layouts.company')
 
 @section('content')
-    @include('components.error-box', [
-        'content' => 'Company details already exist in the database.'
-    ])
     @include('components.edit-delete-back-buttons', [
         'back' => '/companies',
         'edit_link' => '/companies/' . $company->id . '/edit',
@@ -50,17 +47,4 @@
         'slug' => '/companies/' . $company->id,
         'title' => 'Company ' . ucfirst($company->name)
     ])
-    @if($errors->any())
-        @if ($errors->first() == 1062)
-            <script>
-                function errorHandler() {
-                    document.querySelector('#error-popup').classList.add('show-popup');
-                    setTimeout(() => {
-                        document.querySelector('#error-popup').classList.remove('show-popup');
-                    }, 3000);
-                }
-                errorHandler();
-                </script>
-        @endif
-    @endif
 @endsection

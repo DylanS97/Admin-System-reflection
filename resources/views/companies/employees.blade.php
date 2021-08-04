@@ -1,9 +1,6 @@
 @extends('layouts.company')
 
 @section('content')
-    @include('components.error-box', [
-        'content' => 'Employee details already exist in the database.'
-    ])
     <div class="w-full py-8 shadow">
         <div class="flex max-w-7xl mx-auto px-10">
             @include('components.paginate')
@@ -23,13 +20,6 @@
             </a>
         @endslot
     @endcomponent
-    
-    <div class="">
-        <div class="max-w-7xl mx-auto px-10 pt-10">
-            <div class="flex justify-end">
-            </div>
-        </div>
-    </div>
 
     <div class="">
         @include('components.employees-table')
@@ -44,19 +34,4 @@
         'slug' => '/companies/' . $company->id,
         'title' => 'Company ' . ucfirst($company->name)
     ])
-    @if($errors->any())
-        @if ($errors->first() == 1062)
-            <script>
-                function errorHandler() {
-                    // document.querySelector('#error-popup').classList.remove('-top-full');
-                    document.querySelector('#error-popup').classList.add('show-popup');
-                    setTimeout(() => {
-                        document.querySelector('#error-popup').classList.remove('show-popup');
-                        // document.querySelector('#error-popup').classList.add('-top-full');
-                    }, 3000);
-                }
-                errorHandler();
-                </script>
-        @endif
-    @endif
 @endsection
