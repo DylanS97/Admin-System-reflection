@@ -26,14 +26,10 @@ class Companies extends Model
     // Create a company.
     public function addCompany($company, $request) 
     {
-        try {
-            $attributes = Companies::getUpdateAttributes();
-            Companies::validateImage();
-            $attributes['logo'] = str_replace('public/', '', $request->file('logo')->store('public'));
-            $company->create($attributes);
-        } catch (Exception $e) {
-            return back()->withInput()->withErrors($e->validator);
-        }
+        $attributes = Companies::getUpdateAttributes();
+        Companies::validateImage();
+        $attributes['logo'] = str_replace('public/', '', $request->file('logo')->store('public'));
+        $company->create($attributes);
         
         return redirect('/companies');
     }
@@ -41,16 +37,12 @@ class Companies extends Model
     // Update a company.
     public function updateCompany($company, $request) 
     {
-        try {
-            $attributes = Companies::getUpdateAttributes($company);
-            if ($request->file('logo')) {
-                Companies::validateImage();
-                $attributes['logo'] = str_replace('public/', '', $request->file('logo')->store('public'));
-            }
-            $company->update($attributes);
-        } catch (Exception $e) {
-            return back()->withErrors($e->validator)->withInput();
+        $attributes = Companies::getUpdateAttributes($company);
+        if ($request->file('logo')) {
+            Companies::validateImage();
+            $attributes['logo'] = str_replace('public/', '', $request->file('logo')->store('public'));
         }
+        $company->update($attributes);
 
         return redirect('/companies/' . $company->id);
     }

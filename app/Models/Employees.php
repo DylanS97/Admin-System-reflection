@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -40,14 +39,10 @@ class Employees extends Model
     // Add an employee
     public function addEmployee($employee)
     {
-        try {
-            $attributes = Employees::getAttr();
-            $attributes['company_id'] = Companies::where('id', request('company'))->first()->id;
+        $attributes = Employees::getAttr();
+        $attributes['company_id'] = Companies::where('id', request('company'))->first()->id;
 
-            $employee->create($attributes);
-        } catch (Exception $e) {
-            return back()->withInput()->withErrors($e->validator);
-        }
+        $employee->create($attributes);
 
         return redirect('/companies/' . $attributes['company_id'] . '/employees');
     }
@@ -55,13 +50,7 @@ class Employees extends Model
     // Update an employee
     public function updateEmployee($employee) 
     {
-        try {
-            $employee->update(Employees::getAttr($employee));
-        } catch (Exception $e) {
-            $error = $e->validator;
-
-            return back()->withErrors($error);
-        }
+        $employee->update(Employees::getAttr($employee));
 
         return redirect("/employees/" . $employee->id);
     }
