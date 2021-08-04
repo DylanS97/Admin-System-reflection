@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Companies;
 use App\Models\Employees;
-use Exception;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class EmployeesController extends Controller
@@ -38,39 +36,21 @@ class EmployeesController extends Controller
     // Store the created employee.
     public function store(Employees $employee) 
     {
-        $company = Companies::where('id', request('company'))->first();
-        try {
-            $attributes = Employees::getAttr();
-        } catch (Exception $e) {
-            return back()->withInput()->withErrors($e->validator);
-        }
-
-        $employee->addEmployee($company->id, $attributes['first_name'], $attributes['last_name'], $attributes['email'], $attributes['phone_number']);
-
-        return redirect('/companies/' . $company->id . '/employees');
+        return $employee->addEmployee($employee);
     }
 
     // Edit an employees details and what company they work for.
     public function edit(Employees $employee)
     {
-        $company = Companies::where('id', $employee->company_id)->first();
         return view('employees.edit') 
             ->with([
-                'company' => $company,
+                'company' => $employee->company()->first(),
                 'employee' => $employee]);
     }
 
     public function update(Employees $employee)
     {
-        try {
-            $employee->update(Employees::getAttr());
-        } catch (Exception $e) {
-            $error = $e->validator;
-
-            return back()->withErrors($error);
-        }
-
-        return redirect("/employees/" . $employee->id);
+        return $employee->updateEmployee($employee);
     }
 
     // Deleted employee.

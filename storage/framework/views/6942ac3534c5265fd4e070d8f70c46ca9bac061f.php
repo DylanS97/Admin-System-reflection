@@ -1,9 +1,6 @@
 
 
 <?php $__env->startSection('content'); ?>
-    <?php echo $__env->make('components.error-box', [
-        'content' => 'Company details already exist in the database.'
-    ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <?php echo $__env->make('components.edit-delete-back-buttons', [
         'back' => '/companies',
         'edit_link' => '/companies/' . $company->id . '/edit',
@@ -50,19 +47,6 @@
         'slug' => '/companies/' . $company->id,
         'title' => 'Company ' . ucfirst($company->name)
     ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-    <?php if($errors->any()): ?>
-        <?php if($errors->first() == 1062): ?>
-            <script>
-                function errorHandler() {
-                    document.querySelector('#error-popup').classList.add('show-popup');
-                    setTimeout(() => {
-                        document.querySelector('#error-popup').classList.remove('show-popup');
-                    }, 3000);
-                }
-                errorHandler();
-                </script>
-        <?php endif; ?>
-    <?php endif; ?>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.company', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\Dylan\OneDrive\Desktop\Programming\Netmatters\Admin-System-reflection\resources\views/companies/show.blade.php ENDPATH**/ ?>

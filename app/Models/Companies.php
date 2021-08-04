@@ -5,7 +5,6 @@ namespace App\Models;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\QueryException;
 
 class Companies extends Model
 {
@@ -19,23 +18,44 @@ class Companies extends Model
     ];
 
     // Relationship with employees.
-    protected function employees()
+    public function employees()
     {
         return $this->hasMany(Employees::class, 'company_id', 'id');
     }
 
     // Create a company.
-    public function addCompany($attributes) 
+    public function addCompany($company, $request) 
     {
         try {
-            $this->create($attributes);
+            $attributes = Companies::getUpdateAttributes();
+            Companies::validateImage();
+            $attributes['logo'] = str_replace('public/', '', $request->file('logo')->store('public'));
+            $company->create($attributes);
         } catch (Exception $e) {
-            $error = $e->validator;
-
-            return back()->withErrors($error);
+            return back()->withInput()->withErrors($e->validator);
         }
+        
+        return redirect('/companies');
     }
 
+    // Update a company.
+    public function updateCompany($company, $request) 
+    {
+        try {
+            $attributes = Companies::getUpdateAttributes($company);
+            if ($request->file('logo')) {
+                Companies::validateImage();
+                $attributes['logo'] = str_replace('public/', '', $request->file('logo')->store('public'));
+            }
+            $company->update($attributes);
+        } catch (Exception $e) {
+            return back()->withErrors($e->validator)->withInput();
+        }
+
+        return redirect('/companies/' . $company->id);
+    }
+
+    // Show a company.
     public static function showCompany($company, $request)
     {
         return Companies::slugCheck($company, $request);
@@ -49,7 +69,7 @@ class Companies extends Model
                 ->with([
                     'company' => $company,
                     'items' => $items = $request->items ?? 10,
-                    'employees' => $employees = Companies::search('employee', $request, $items, $company)]);
+                    'employees' => Companies::search('employee', $request, $items, $company)]);
         } else {
             return view('companies.show')
                 ->with([
@@ -71,7 +91,6 @@ class Companies extends Model
             ])
                 ->paginate($items);
         } else if ($option =='employee') {
-            // $employees = Employees::all()->where('company_id', $company['id'])->orderBy;
             return Employees::where([
                 ['company_id', $company['id']],
                 [function($query) use ($request) {
@@ -83,17 +102,15 @@ class Companies extends Model
                 }]
             ])
                 ->paginate($items);
-
-            // dd($employees);
         }
     }
 
     // Get attributes for update.
-    public static function getUpdateAttributes() {
+    public static function getUpdateAttributes($company = null) {
         
         return request()->validate([
-            'name' => 'required|unique:companies',
-            'email' => 'required|email|unique:companies',
+            'name' => $company ? 'sometimes|required|unique:companies,name,'.$company->id : 'required|unique:companies',
+            'email' => $company ? 'sometimes|required|unique:companies,email,'.$company->id : 'required|unique:companies',
             'website' => 'required|url'
         ]);
     }

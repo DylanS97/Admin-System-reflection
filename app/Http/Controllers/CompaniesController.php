@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Companies;
-use App\Models\Employees;
-use Exception;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class CompaniesController extends Controller
@@ -15,7 +12,6 @@ class CompaniesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // Show collection of companies.
     public function index(Request $request)
     {
         return view('companies.index')
@@ -29,7 +25,6 @@ class CompaniesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // Direct to create company page.
     public function create()
     {
         return view('companies.create');
@@ -41,20 +36,9 @@ class CompaniesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // Store created company.
     public function store(Companies $company, Request $request) 
     {
-        try {
-            $attributes = Companies::getUpdateAttributes();
-            Companies::validateImage();
-            $attributes['logo'] = str_replace('public/', '', $request->file('logo')->store('public'));
-        } catch (Exception $e) {
-            return back()->withInput()->withErrors($e->validator);
-        }
-
-        $company->addCompany($attributes);
-
-        return redirect('/companies');
+        return $company->addCompany($company, $request);
     }
 
     /**
@@ -63,7 +47,6 @@ class CompaniesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // Show a company.
     public function show(Companies $company, Request $request)
     {
         return $company->showCompany($company, $request);
@@ -90,26 +73,7 @@ class CompaniesController extends Controller
      */
     public function update(Companies $company, Request $request)
     {
-        try {
-            $attributes = Companies::getUpdateAttributes();
-            if ($request->file('logo')) {
-                Companies::validateImage();
-                $attributes['logo'] = str_replace('public/', '', $request->file('logo')->store('public'));
-            }
-        } catch (Exception $e) {
-            return back()->withErrors($e->validator)->withInput();
-        }
-
-        try {
-            $company->update($attributes);
-        } catch (QueryException $e) {
-            $errorCode = $e->errorInfo[1];
-            if($errorCode == 1062) {
-                return redirect("/companies/" . $company->id)->withErrors($errorCode);
-            }
-        }
-
-        return redirect('/companies/' . $company->id);
+        return $company->updateCompany($company, $request);
     }
 
     /**
@@ -122,8 +86,7 @@ class CompaniesController extends Controller
     public function destroy(Companies $company) 
     {
         Companies::deleteImage($company->logo);
-        Employees::where('company_id', $company->id)
-            ->delete();
+        $company->employees()->delete();
         $company->delete();
 
         return redirect('/companies');
