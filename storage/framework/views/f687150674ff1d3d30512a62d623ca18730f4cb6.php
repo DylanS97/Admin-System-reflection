@@ -1,0 +1,3 @@
+<a id="<?php echo e($location); ?>" href="/<?php echo e($location); ?>" class="category inline-block p-20 bg-gray-300 hover:bg-gray-400 m-7 ml-0 rounded-lg active\:scale-90 transition-all">
+    <h1 class="text-xl font-semibold"><?php echo e(ucfirst($location)); ?></h1>
+</a><?php /**PATH C:\Users\Dylan\OneDrive\Desktop\Programming\Netmatters\Reflections\Admin-System-reflection\resources\views/components/dashboard-buttons.blade.php ENDPATH**/ ?>
